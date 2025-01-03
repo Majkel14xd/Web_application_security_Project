@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel kontrolny sklepu jubilerskiego</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard_main.css') }}" />
+  </head>
+  <body>
+    <div id="top_menu">
+      <a href="{{ url_for('logout.logout') }}">Wyloguj</a>    
+    </div>
+    <div id="content">
+      <h2>Sprzedaż</h2>
+
+      <!-- Formularz wyszukiwania sprzedaży po dacie -->
+   <form method="GET" action="{{ url_for('sprzedaz.sprzedaz') }}">
+    <label for="start_date">Od:</label>
+    <input type="date" name="start_date" id="start_date" value="{{ start_date }}">
+    <label for="end_date">Do:</label>
+    <input type="date" name="end_date" id="end_date" value="{{ end_date }}">
+    <button type="submit">Filtruj</button>
+</form>
+
+      <br>
+
+      <!-- Formularz dodawania sprzedaży -->
+      <form method="POST">
+        <h3>Dodaj sprzedaż</h3>
+
+        <!-- Wybór pracownika -->
+        <label for="id_pracownika">Pracownik:</label>
+        <select name="id_pracownika" id="id_pracownika" required>
+          <option value="" disabled selected>Wybierz pracownika</option>
+          {% for pracownik in pracownicy %}
+            <option value="{{ pracownik[0] }}">{{ pracownik[1] }}</option>
+          {% endfor %}
+        </select>
+
+        <!-- Wybór produktu -->
+        <label for="id_produktu">Produkt:</label>
+        <select name="id_produktu" id="id_produktu" required>
+          <option value="" disabled selected>Wybierz produkt</option>
+          {% for produkt in produkty %}
+            <option value="{{ produkt[0] }}">{{ produkt[1] }}</option>
+          {% endfor %}
+        </select>
+
+        <!-- Data sprzedaży -->
+        <label for="data_sprzedazy">Data sprzedaży:</label>
+        <input type="date" name="data_sprzedazy" id="data_sprzedazy" required />
+
+        <button type="submit">Dodaj</button>
+      </form>
+
+      <br>
+
+      <!-- Tabela sprzedaży -->
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Pracownik</th>
+            <th>Produkt</th>
+            <th>Data sprzedaży</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in sprzedaz %}
+            <tr>
+              <td>{{ item[0] }}</td>
+              <td>{{ item[1] }}</td>
+              <td>{{ item[2] }}</td>
+              <td>{{ item[3] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Paginacja -->
+      <div id="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for('sprzedaz.sprzedaz', page=page-1, start_date=start_date, end_date=end_date) }}">Poprzednia</a>
+        {% endif %}
+        <span>Strona {{ page }}</span>
+        {% if sprzedaz|length == per_page %}
+          <a href="{{ url_for('sprzedaz.sprzedaz', page=page+1, start_date=start_date, end_date=end_date) }}">Następna</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="left_menu">
+      <a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
+      <a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
+      <a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
+    </div>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel kontrolny systemu opadów wody</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard_main.css') }}" />
+  </head>
+  <body>
+    <div id="top_menu">
+      <a href="{{ url_for('logout.logout') }}">Wyloguj</a>    
+    </div>
+    <div id="content">
+      {% if welcome_message %}
+        <p id="welcome_message">{{ welcome_message }}</p>
+      {% endif %}
+      <h2>Pracownicy</h2>
+      <form method="POST">
+        <h3>Dodaj nowego pracownika</h3>
+        <input type="text" name="imie" placeholder="Imię" required />
+        <input type="text" name="nazwisko" placeholder="Nazwisko" required />
+        <input type="text" name="stanowisko" placeholder="Stanowisko" required />
+        <button type="submit">Dodaj</button>
+      </form>
+<br>
+<br>
+      <form method="GET" action="{{ url_for('pracownicy.pracownicy') }}">
+<input type="text" name="search" placeholder="Szukaj po imieniu lub nazwisku" value="{{ search_query | safe }}" />
+        <button type="submit">Szukaj</button>
+      </form>
+ <h3>Szukaj pracownika</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Stanowisko</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pracownik in pracownicy %}
+            <tr>
+              <td>{{ pracownik[0] }}</td>
+              <td>{{ pracownik[1] }}</td>
+              <td>{{ pracownik[2] }}</td>
+              <td>{{ pracownik[3] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+ 
+      <div id="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for('pracownicy.pracownicy', page=page-1, search=search_query) }}">Poprzednia</a>
+        {% endif %}
+        <span>Strona {{ page }}</span>
+        {% if pracownicy|length == per_page %}
+          <a href="{{ url_for('pracownicy.pracownicy', page=page+1, search=search_query) }}">Następna</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="left_menu">
+<a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
+<a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
+<a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
+    </div>
+  </body>
+</html>

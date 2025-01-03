@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wprowadź tekst</title>
+</head>
+<body>
+    <h2>Wpisz tekst</h2>
+    <input type="text" id="inputText" placeholder="Wpisz coś..." />
+    <button onclick="showText()">Pokaż tekst</button>
+    
+    <p id="outputText"></p>
+
+    <script>
+        function showText() {
+            var input = document.getElementById('inputText').value;
+            document.getElementById('outputText').innerHTML = input;
+        }
+    </script>
+</body>
+</html>

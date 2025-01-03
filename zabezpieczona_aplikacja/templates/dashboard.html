@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel kontrolny sklepu jubilreskiego</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+  </head>
+  <body>
+<div id="top_menu">
+<a href="{{ url_for('logout.logout') }}">Wyloguj</a>    
+    </div>
+    <div id="content">
+     {% if welcome_message %}
+          <p id="welcome_message">{{ welcome_message }}</p>
+        {% endif %}
+    </div>
+    <div id="left_menu">
+<a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
+<a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
+<a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
+    </div>
+  </body>
+</html>

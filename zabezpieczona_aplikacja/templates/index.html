@@ -1,34 +1,20 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logowanie</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="login-container">
-        <h2>Logowanie Panelu Adminsitracyjengo Sklepu Bomar</h2>
-        <form method="POST">
-            <div>
-                <label for="login">Login:</label>
-                <input type="text" id="login" name="login" required>
-            </div>
-            <div>
-                <label for="haslo">Hasło:</label>
-                <input type="password" id="haslo" name="haslo" required>
-            </div>
-            <button type="submit">Zaloguj się</button>
-        </form>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flash-messages">
-                    {% for category, message in messages %}
-                        <li class="flash {{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Adminitracyjny Sklepu Jubilreskiego Bomar</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('index.static', filename='index/index_style.css') }}"
+    />
+  </head>
+  <body>
+    <div id="top-menu">
+    <a href="{{ url_for('login.login') }}">Zaloguj</a>
     </div>
-</body>
+    <div id="content">Witaj na panelu adminitracyjnego sklepu jubilreskiego Bomar</div>
+    <div id="footer">Copyright Michał Lidwa Robert Kaleta 2024/2025</div>
+  </body>
 </html>

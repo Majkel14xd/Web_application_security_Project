@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel kontrolny systemu opadów wody</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard_main.css') }}" />
+  </head>
+  <body>
+    <div id="top_menu">
+      <a href="{{ url_for('logout.logout') }}">Wyloguj</a>    
+    </div>
+    <div id="content">
+<h2>Produkty</h2>
+<form method="POST">
+    <h3>Dodaj nowy produkt</h3>
+    <input type="text" name="nazwa" placeholder="Nazwa" required />
+    <input type="number" step="0.01" name="cena" placeholder="Cena" required />
+    <button type="submit">Dodaj</button>
+</form>
+<br>
+<form method="GET" action="{{ url_for('produkty.produkty') }}">
+    <input type="text" name="search" placeholder="Szukaj po nazwie" value="{{ search_query }}" />
+    <button type="submit">Szukaj</button>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Cena</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produkt in produkty %}
+        <tr>
+            <td>{{ produkt[0] }}</td>
+            <td>{{ produkt[1] }}</td>
+            <td>{{ produkt[2] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+      <div id="pagination">
+        {% if page > 1 %}
+          <a href="{{ url_for('produkty.produkty', page=page-1, search=search_query) }}">Poprzednia</a>
+        {% endif %}
+        <span>Strona {{ page }}</span>
+        {% if produkty|length == per_page %}
+          <a href="{{ url_for('produkty.produkty', page=page+1, search=search_query) }}">Następna</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="left_menu">
+<a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
+<a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
+<a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
+    </div>
+  </body>
+</html>

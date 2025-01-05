@@ -18,13 +18,13 @@
       
       <!-- Formularz dodawania pracownika -->
       <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <h3>Dodaj nowego pracownika</h3>
         <input type="text" name="imie" placeholder="Imię" required />
         <input type="text" name="nazwisko" placeholder="Nazwisko" required />
         <input type="text" name="stanowisko" placeholder="Stanowisko" required />
         
-        <!-- Dodanie tokenu CSRF -->
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
         
         <button type="submit">Dodaj</button>
       </form>

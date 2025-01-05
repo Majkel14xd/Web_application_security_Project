@@ -26,9 +26,9 @@ def sanitize_input(input_str):
 
 # Funkcja do generowania tokenu CSRF
 def generate_csrf_token():
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = hashlib.sha256(os.urandom(64)).hexdigest()
-    return session['_csrf_token']
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)  # Generowanie losowego tokenu CSRF
+    return session['csrf_token']
 
 # Funkcja do pobierania pracowników z bazy danych
 def get_pracownicy(search_query=None, per_page=8, page=1):
@@ -68,16 +68,16 @@ def add_pracownik(imie, nazwisko, stanowisko):
 def pracownicy():
     if 'user_id' not in session:
         return redirect(url_for('login.login')) 
-    
+
     search_query = request.args.get('search', '')
     search_query = sanitize_input(search_query)  # Sanitizujemy dane wejściowe
     page = int(request.args.get('page', 1))
     pracownicy = get_pracownicy(search_query, per_page=8, page=page)
-
+    csrf_token = generate_csrf_token()
     if request.method == 'POST':
         # Sprawdzanie tokenu CSRF
         token = request.form.get('csrf_token')
-        if not token or token != session.get('_csrf_token'):
+        if not token or token != session.get('csrf_token'):
             abort(403)  # Jeśli token jest nieprawidłowy, zwraca błąd 403
 
         # Sanitizujemy dane wejściowe z formularza
@@ -87,11 +87,10 @@ def pracownicy():
 
         add_pracownik(imie, nazwisko, stanowisko)
         session.pop('csrf_token', None)
-        session['csrf_token'] = generate_csrf_token()
+
         return redirect(url_for('pracownicy.pracownicy', page=page, search=search_query)) 
     
-    # Generowanie tokenu CSRF
-    csrf_token = generate_csrf_token()
+  
 
     return render_template(
         'pracownicy.html',

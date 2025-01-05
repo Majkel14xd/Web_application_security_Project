@@ -108,7 +108,7 @@ def sprzedaz():
         data_sprzedazy = sanitize_input(request.form['data_sprzedazy'])  # Sanitizacja daty sprzedaży
         add_sprzedaz(id_pracownika, id_produktu, data_sprzedazy)
         session.pop('csrf_token', None)
-        session['csrf_token'] = generate_csrf_token()
+       
 
         return redirect(url_for('sprzedaz.sprzedaz', page=page))
 

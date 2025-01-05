@@ -6,6 +6,8 @@ from views.dashboard import dashboard_bp
 from views.pracownicy import pracownicy_bp
 from views.sprzedaz import sprzedaz_bp
 from views.produkty import produkty_bp
+from views.fake_produkty import fake_produkty_bp
+
 import hashlib
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
@@ -27,9 +29,15 @@ def create_app():
     app.register_blueprint(pracownicy_bp ,url_prefix="/dashboard")
     app.register_blueprint(sprzedaz_bp ,url_prefix="/dashboard")
     app.register_blueprint(produkty_bp ,url_prefix="/dashboard")
+    app.register_blueprint(fake_produkty_bp ,url_prefix="/dashboard")
     return app
 
 
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_COOKIE_SECURE=True,
+)
 EXPECTED_CERT_HASH = "11C0A2146058C6DF3C10656234B80AF46CE5AD6FE9702FF96A15CD9CCF4EF9F2"
 
 def get_cert_hash(cert_pem):

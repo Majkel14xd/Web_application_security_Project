@@ -62,5 +62,4 @@ def login():
     # Generowanie tokenu CSRF
   
     session.pop('csrf_token', None)
-    session['csrf_token'] = generate_csrf_token()
     return render_template('login.html', csrf_token=csrf_token)

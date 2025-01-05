@@ -50,6 +50,9 @@
         {% if produkty|length == per_page %}
           <a href="{{ url_for('produkty.produkty', page=page+1, search=search_query) }}">Następna</a>
         {% endif %}
+        <br>
+        <a href="{{ url_for('fake_produkty.fake_produkty') }}">Fałszywa strona jak cos</a>   
+
       </div>
     </div>
 

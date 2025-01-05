@@ -83,7 +83,7 @@ def produkty():
         
         add_produkt(nazwa, cena)
         session.pop('csrf_token', None)
-        session['csrf_token'] = generate_csrf_token()
+
 
 
         return redirect(url_for('produkty.produkty', page=page, search=search_query))

@@ -1,31 +1,26 @@
-from flask import Flask, render_template
-from flask_mysqldb import MySQL
-import os
-from config import Config
-
+from flask import Flask
+from views.index import index_bp
+from views.login import login_bp
+from views.logout import logout_bp
+from views.dashboard import dashboard_bp
+from views.pracownicy import pracownicy_bp
+from views.sprzedaz import sprzedaz_bp
+from views.produkty import produkty_bp
 app = Flask(__name__)
-app.config.from_object(Config)  # Załaduj konfigurację z klasy Config
+def create_app():
+    app.secret_key = 'MLRK'
+    app.jinja_env.autoescape = False
+    # Rejestracja Blueprinta dla strony głównej
+    app.register_blueprint(index_bp)
+    app.register_blueprint(login_bp)
+    app.register_blueprint(logout_bp) 
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(pracownicy_bp ,url_prefix="/dashboard")
+    app.register_blueprint(sprzedaz_bp ,url_prefix="/dashboard")
+    app.register_blueprint(produkty_bp ,url_prefix="/dashboard")
 
-mysql = MySQL(app)  # Inicjalizacja MySQL
-
-# Przykładowa trasa
-@app.route('/')
-def home():
-    return render_template("index.html")
-
-@app.route('/dane')
-def dane():
-    # Tworzenie kursora do komunikacji z bazą
-    cur = mysql.connection.cursor()  # Użyj instancji mysql
-
-    # Wykonanie zapytania SQL
-    cur.execute("SELECT * FROM `tabelatest`")  # Upewnij się, że tabela istnieje
-    
-    # Pobranie wyników zapytania
-    results = cur.fetchall()
-    
-    # Zwracanie wyników w przeglądarce
-    return f"Wyniki zapytania: {results}"
+    return app
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Włączenie trybu debugowania
+    app = create_app()
+    app.run(debug=True, host='0.0.0.0', port=5000)

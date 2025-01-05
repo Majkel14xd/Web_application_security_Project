@@ -13,10 +13,10 @@ def get_db_connection():
 
 @dashboard_bp.route('/dashboard')
 def dashboard():
-    
+
     if 'user_id' not in session:
         return redirect(url_for('login.login')) 
-    
+
     user_id = session['user_id']
     
     conn = get_db_connection()

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Panel kontrolny sklepu jubilreskiego</title>    
-   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard_main.css') }}" />
+    <title>Panel kontrolny sklepu jubilreskiego</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard_main.css') }}" />
   </head>
   <body>
     <div id="top_menu">
@@ -15,31 +15,20 @@
         <p id="welcome_message">{{ welcome_message }}</p>
       {% endif %}
       <h2>Pracownicy</h2>
-      
-      <!-- Formularz dodawania pracownika -->
       <form method="POST">
         <h3>Dodaj nowego pracownika</h3>
         <input type="text" name="imie" placeholder="Imię" required />
         <input type="text" name="nazwisko" placeholder="Nazwisko" required />
         <input type="text" name="stanowisko" placeholder="Stanowisko" required />
-        
-        <!-- Dodanie tokenu CSRF -->
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        
         <button type="submit">Dodaj</button>
       </form>
-      
-      <br>
-      <br>
-
-      <!-- Formularz wyszukiwania pracownika -->
+<br>
+<br>
       <form method="GET" action="{{ url_for('pracownicy.pracownicy') }}">
-        <input type="text" name="search" placeholder="Szukaj po imieniu lub nazwisku" value="{{ search_query | safe }}" />
+<input type="text" name="search" placeholder="Szukaj po imieniu lub nazwisku" value="{{ search_query | safe }}" />
         <button type="submit">Szukaj</button>
       </form>
-
-      <h3>Szukaj pracownika</h3>
-      
+ <h3>Szukaj pracownika</h3>
       <table>
         <thead>
           <tr>
@@ -61,6 +50,7 @@
         </tbody>
       </table>
 
+ 
       <div id="pagination">
         {% if page > 1 %}
           <a href="{{ url_for('pracownicy.pracownicy', page=page-1, search=search_query) }}">Poprzednia</a>
@@ -73,9 +63,9 @@
     </div>
 
     <div id="left_menu">
-      <a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
-      <a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
-      <a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
+<a href="{{ url_for('produkty.produkty') }}">Produkty</a>   
+<a href="{{ url_for('pracownicy.pracownicy') }}">Pracownicy</a>   
+<a href="{{ url_for('sprzedaz.sprzedaz') }}">Sprzedaz</a>   
     </div>
   </body>
 </html>

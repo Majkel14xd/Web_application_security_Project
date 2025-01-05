@@ -9,8 +9,7 @@ CREATE TABLE pracownicy (
 CREATE TABLE produkty (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nazwa TEXT NOT NULL,
-    cena REAL NOT NULL,
-    opis TEXT
+    cena REAL NOT NULL
 );
 
 CREATE TABLE konto (

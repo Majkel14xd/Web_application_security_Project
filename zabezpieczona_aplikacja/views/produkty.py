@@ -82,6 +82,10 @@ def produkty():
             return "Invalid price format", 400  # Obsługa błędu dla nieprawidłowego formatu ceny
         
         add_produkt(nazwa, cena)
+        session.pop('csrf_token', None)
+        session['csrf_token'] = generate_csrf_token()
+
+
         return redirect(url_for('produkty.produkty', page=page, search=search_query))
 
     return render_template(

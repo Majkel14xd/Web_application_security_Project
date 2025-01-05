@@ -9,11 +9,15 @@ from views.produkty import produkty_bp
 import hashlib
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
+import os
+from OpenSSL import SSL
 
 app = Flask(__name__)
 
+
+
 def create_app():
-    app.secret_key="MLRK"
+    app.secret_key= os.urandom(24)
     app.jinja_env.autoescape = False
     # Rejestracja Blueprinta dla strony głównej
     app.register_blueprint(index_bp)
@@ -67,4 +71,4 @@ def after_request_func(response):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, ssl_context=('Cert/server.crt', 'Cert/server.key'), host='0.0.0.0', port=5000)
+    app.run(debug=True, ssl_context=('Cert/server.crt', 'Cert/server.key',), host='0.0.0.0', port=5000)

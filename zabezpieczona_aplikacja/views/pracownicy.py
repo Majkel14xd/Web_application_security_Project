@@ -3,7 +3,7 @@ import sqlite3
 import os
 import hashlib
 import re
-
+import secrets
 pracownicy_bp = Blueprint('pracownicy', __name__, template_folder='templates', static_folder='static')
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Database'))
 db_path = os.path.join(base_dir, 'database.db')
@@ -86,6 +86,8 @@ def pracownicy():
         stanowisko = sanitize_input(request.form['stanowisko'])
 
         add_pracownik(imie, nazwisko, stanowisko)
+        session.pop('csrf_token', None)
+        session['csrf_token'] = generate_csrf_token()
         return redirect(url_for('pracownicy.pracownicy', page=page, search=search_query)) 
     
     # Generowanie tokenu CSRF

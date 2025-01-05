@@ -38,7 +38,7 @@ def sanitize_input(input_str):
 def login():
     if 'user_id' in session:
         return redirect(url_for('dashboard.dashboard'))  # Jeśli użytkownik jest zalogowany, przekierowanie do dashboardu
-
+    csrf_token = generate_csrf_token()
     if request.method == 'POST':
         token = request.form.get('csrf_token')
         if not token or token != session.get('_csrf_token'):
@@ -60,5 +60,7 @@ def login():
             flash('Błędny login lub hasło', 'error')
 
     # Generowanie tokenu CSRF
-    csrf_token = generate_csrf_token()
+  
+    session.pop('csrf_token', None)
+    session['csrf_token'] = generate_csrf_token()
     return render_template('login.html', csrf_token=csrf_token)

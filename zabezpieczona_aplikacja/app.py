@@ -63,7 +63,7 @@ def check_cert():
     """Sprawdzanie certyfikatu przy każdym połączeniu"""
     if request.url.startswith('https://'):
         # Załaduj certyfikat z pliku cert.pem
-        cert_pem = load_cert_from_file('Cert/server.crt')  # Ścieżka do pliku certyfikatu
+        cert_pem = load_cert_from_file('Certs/server.crt')  # Ścieżka do pliku certyfikatu
 
         if cert_pem:
             # Obliczanie hasza certyfikatu
@@ -84,4 +84,4 @@ def after_request_func(response):
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, ssl_context=('Cert/server.crt', 'Cert/server.key',), host='0.0.0.0', port=5000)
+    app.run(debug=True, ssl_context=('Certs/server.crt', 'Certs/server.key',), host='0.0.0.0', port=5000)

@@ -12,7 +12,6 @@ import hashlib
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 import os
-from OpenSSL import SSL
 from dotenv import load_dotenv
 import os
 

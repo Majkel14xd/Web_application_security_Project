@@ -13,10 +13,17 @@ from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 import os
 from OpenSSL import SSL
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
 
 app = Flask(__name__)
 
-
+# Pobierz wartość zmiennej EXPECTED_CERT_HASH
+EXPECTED_CERT_HASH = os.getenv("EXPECTED_CERT_HASH")
 
 def create_app():
     app.secret_key= os.urandom(24)
@@ -38,7 +45,6 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
     SESSION_COOKIE_SECURE=True,
 )
-EXPECTED_CERT_HASH = "11C0A2146058C6DF3C10656234B80AF46CE5AD6FE9702FF96A15CD9CCF4EF9F2"
 
 def get_cert_hash(cert_pem):
     """Funkcja do obliczania hasza certyfikatu"""

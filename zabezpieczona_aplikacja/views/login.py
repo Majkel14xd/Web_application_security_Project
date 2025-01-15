@@ -3,6 +3,7 @@ import sqlite3
 import os
 import hashlib
 import re
+import time
 
 login_bp = Blueprint('login', __name__, template_folder='templates', static_folder='static')
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Database'))
@@ -21,7 +22,6 @@ def generate_csrf_token():
     return session['_csrf_token']
 
 def sanitize_input(input_str):
-
     # Usuwamy potencjalnie niebezpieczne znaczniki HTML
     sanitized_str = re.sub(r'<.*?>', '', input_str)  # Usuwa wszystko w tagach <>
 
@@ -33,11 +33,57 @@ def sanitize_input(input_str):
 
     return sanitized_str.strip()
 
+def check_failed_attempts(login):
+    conn = get_db_connection()
+    query = "SELECT liczba_prob, liczba_prob_data FROM konto WHERE login = ?"
+    result = conn.execute(query, (login,)).fetchone()
+    conn.close()
+
+    if result:
+        liczba_prob, liczba_prob_data = result
+        current_time = int(time.time())
+        
+        # Sprawdzamy, czy próby logowania były w ciągu ostatniej minuty
+        if liczba_prob >= 3 and (current_time - liczba_prob_data) < 60:
+            return True
+        elif (current_time - liczba_prob_data) >= 60:
+            # Resetujemy liczbę prób, jeśli minęła minuta
+            reset_failed_attempts(login)
+    
+    return False
+
+def reset_failed_attempts(login):
+    conn = get_db_connection()
+    query = "UPDATE konto SET liczba_prob = 0, liczba_prob_data = 0 WHERE login = ?"
+    conn.execute(query, (login,))
+    conn.commit()
+    conn.close()
+
+def increment_failed_attempts(login):
+    conn = get_db_connection()
+    current_time = int(time.time())
+    query = "SELECT liczba_prob, liczba_prob_data FROM konto WHERE login = ?"
+    result = conn.execute(query, (login,)).fetchone()
+
+    if result:
+        liczba_prob, liczba_prob_data = result
+        if liczba_prob == 0 or (current_time - liczba_prob_data) >= 60:
+            # Resetujemy próbę po minucie
+            query = "UPDATE konto SET liczba_prob = 1, liczba_prob_data = ? WHERE login = ?"
+            conn.execute(query, (current_time, login))
+        else:
+            # Zwiększamy liczbę prób
+            query = "UPDATE konto SET liczba_prob = ?, liczba_prob_data = ? WHERE login = ?"
+            conn.execute(query, (liczba_prob + 1, current_time, login))
+        conn.commit()
+    conn.close()
+
 # Strona logowania
 @login_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
         return redirect(url_for('dashboard.dashboard'))  # Jeśli użytkownik jest zalogowany, przekierowanie do dashboardu
+    
     csrf_token = generate_csrf_token()
     if request.method == 'POST':
         token = request.form.get('csrf_token')
@@ -48,9 +94,14 @@ def login():
         login = sanitize_input(request.form['login'])
         haslo = sanitize_input(request.form['haslo'])
 
-        query = f"SELECT * FROM konto WHERE login = '{login}' AND haslo = '{haslo}'"
+        # Sprawdzenie, czy użytkownik przekroczył limit prób
+        if check_failed_attempts(login):
+            flash('Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za minutę.', 'error')
+            return render_template('login.html', csrf_token=csrf_token)
+
+        query = "SELECT * FROM konto WHERE login = ? AND haslo = ?"
         conn = get_db_connection()
-        user = conn.execute(query).fetchone()
+        user = conn.execute(query, (login, haslo)).fetchone()
         conn.close()
 
         if user:
@@ -58,8 +109,7 @@ def login():
             return redirect(url_for('dashboard.dashboard'))  # Po udanym logowaniu przekierowanie do dashboardu
         else:
             flash('Błędny login lub hasło', 'error')
+            increment_failed_attempts(login)
 
-    # Generowanie tokenu CSRF
-  
     session.pop('csrf_token', None)
     return render_template('login.html', csrf_token=csrf_token)

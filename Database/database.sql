@@ -1,4 +1,3 @@
-
 CREATE TABLE pracownicy (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     imie TEXT NOT NULL,
@@ -18,10 +17,9 @@ CREATE TABLE konto (
     haslo TEXT NOT NULL,
     id_pracownika INTEGER,
     liczba_prob INTEGER DEFAULT 0,
-    liczba_prob_czas INTEGER DEFAULT 0,
+    liczba_prob_data INTEGER DEFAULT 0,  -- Typ INTEGER do przechowywania timestampu
     FOREIGN KEY(id_pracownika) REFERENCES pracownicy(id)
 );
-
 
 CREATE TABLE sprzedaz (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,21 +30,14 @@ CREATE TABLE sprzedaz (
     FOREIGN KEY(id_produktu) REFERENCES produkty(id)
 );
 
+INSERT INTO pracownicy (imie, nazwisko, stanowisko) VALUES
+('Jan', 'Nowak', 'Zarzad'),
+('Michal', 'Kowalski', 'Zarzad'),
+('Aneta', 'Jurasik', 'Sklepowa');
 
-
-INSERT INTO pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Jan', 'Nowak', 'Zarzad');
-INSERT INTO pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Michal', 'Kowalski', 'Zarzad');
-
-INSERT INTO pracownicy (imie, nazwisko, stanowisko)
-VALUES ('Aneta', 'Jurasik', 'Sklepowa');
-
-
-INSERT INTO konto (login, haslo, id_pracownika)
-VALUES ('Jan12', 'cisco12345', 1);
-INSERT INTO konto (login, haslo, id_pracownika)
-VALUES ('Michal14', 'zaq1@WSX', 2);
+INSERT INTO konto (login, haslo, id_pracownika) VALUES
+('Jan12', 'cisco12345', 1),
+('Michal14', 'zaq1@WSX', 2);
 
 INSERT INTO produkty (nazwa, cena) VALUES
 ('Naszyjnik pozłacany', 250),
